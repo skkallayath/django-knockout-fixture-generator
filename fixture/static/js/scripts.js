@@ -4,6 +4,6 @@ jQuery(document).ready(function() {
     /*
         Fullscreen background
     */
-    $.backstretch("static/img/backgrounds/fixture.jpg");
+    $.backstretch("static/img/backgrounds/fixture_blur.jpg");
     
 });

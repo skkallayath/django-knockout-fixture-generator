@@ -1,25 +1,20 @@
 from django.contrib import admin
-from .models import Player, Fixture, Match
+from .models import Player, Fixture, Match, FixturePlayer, Display
 from .utils import genearte_random_string
-from django.http import HttpResponseRedirect
 import math
 
 # Register your models here.
-
-def create_fixture(modeladmin, request, queryset):
-    fixture = Fixture(name=genearte_random_string())
-    fixture.save()
-    for player in queryset:
-        fixture.players.add(player)
-    fixture.save()
-    create_schedules(fixture)
-    return HttpResponseRedirect("/admin/fixture/fixture/%d/change/" % (fixture.pk))
+def generate_schedules(modeladmin, request, queryset):
+    for fixture in queryset:
+        fixture.matches.all().delete()
+        fixture.save()
+        create_schedules(fixture)
 
 def create_schedules(fixture):
-    _player_list = list(fixture.players.all())
+    _player_list = list(fixture.players.order_by('rank'))
     _len = len(_player_list)
     _rounds = int(math.ceil(math.log(_len, 2)))
-    _number_of_players = int(math.pow(_rounds, 2))
+    _number_of_players = int(math.pow(2, _rounds))
     print(_len, _number_of_players, _rounds)
     _players = _player_list + ([None]*(_number_of_players - _len))
 
@@ -31,12 +26,15 @@ def create_schedules(fixture):
         _match = Match()
         _match.fixture = fixture
         _match.match_round = _round
-        _match.player_1 = _players[i]
-        _match.player_2 = _players[-1-i]
+        if _players[i]:
+            _match.player_1 = _players[i].player
+        if _players[-1-i]:
+            _match.player_2 = _players[-1-i].player
 
         if _match.player_1 and _match.player_2:
             _match.match_number = _counter
             _counter = _counter+1
+            print(_counter)
 
         _match.save()
 
@@ -65,6 +63,7 @@ def generate_next_rounds(fixture, matches, _round, counter):
 
         _match.match_number = counter
         counter = counter+1
+        print(counter)
 
         _match.save()
 
@@ -72,7 +71,7 @@ def generate_next_rounds(fixture, matches, _round, counter):
     
     generate_next_rounds(fixture, _matches, _round+1, counter)
 
-create_fixture.short_description = "Create knockout fixture"
+generate_schedules.short_description = "Generate knockout fixture"
 
 class PlayerAdmin(admin.ModelAdmin):
     list_display = ['name']
@@ -102,11 +101,7 @@ class MatchInline(admin.TabularInline):
 class FixturePlayerInline(admin.TabularInline):
     model = FixturePlayer
     ordering = ['rank']
-    readonly_fields = ('rank', )
-    fields = ('name')
-    can_delete = False
-    def has_add_permission(self, request):
-        return False
+    fields = ('player', 'rank', )
 
 class FixtureAdmin(admin.ModelAdmin):
     # readonly_fields = ('players',)
@@ -115,15 +110,10 @@ class FixtureAdmin(admin.ModelAdmin):
         MatchInline,
         FixturePlayerInline,
     ]
-
-    def save(self, *args, **kwargs):
-
-        super(FixtureAdmin, self).save(*args, **kwargs)
-
-        return HttpResponseRedirect("/admin/fixture/fixture/%d/change/" % (self.pk))
-
+    actions = [generate_schedules]
 
 admin.site.register(Player, PlayerAdmin)
 admin.site.register(Match, MatchAdmin)
 
 admin.site.register(Fixture, FixtureAdmin)
+admin.site.register(Display)

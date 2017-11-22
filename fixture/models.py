@@ -11,8 +11,6 @@ class Player(models.Model):
 
 class Fixture(models.Model):
     name = models.CharField(max_length=100)
-    description = models.CharField(max_length=1024, blank=True, default='', null=True)
-    # players = models.ManyToManyField(FixturePlayer)
     pub_date  =models.DateTimeField('date published', null=True)
 
     def __str__(self):
@@ -24,7 +22,7 @@ class Fixture(models.Model):
 
 class FixturePlayer(models.Model):
     class Meta:
-        unique_together = (('rank', 'fixture'),)
+        unique_together = (('rank', 'fixture'),('fixture', 'player'))
     rank = models.IntegerField()
     player = models.ForeignKey(Player, related_name="rank_in_fixture")
     fixture = models.ForeignKey(Fixture, related_name="players")
@@ -46,7 +44,7 @@ class Match(models.Model):
         ("Player 1", "Player 1"),
         ("Player 2", "Player 2")
     ]
-    match_number = models.IntegerField(blank=True, default=0)
+    match_number = models.IntegerField(blank=True, null=True)
     fixture = models.ForeignKey(Fixture, related_name="matches")
     match_round = models.IntegerField()
     left_previous = models.OneToOneField(
@@ -129,3 +127,9 @@ class Match(models.Model):
     def is_bye(self):
         return self.status == 'BYE', self.player_1 or self.player_2
 
+
+class Display(models.Model):
+    fixture = models.ForeignKey(Fixture, related_name="displays")
+    icon = models.FileField(upload_to='icons/%Y/%m/%d/', blank=True)
+    name = models.CharField(max_length=256)
+    description = models.TextField(blank=True, default='', null=True)
