@@ -1,0 +1,43 @@
+{%extends '../layout.html' %}
+<div class="header-content">
+    <div class="header-content-inner">
+        <h1 id="homeHeading">{{fixture.name}} - Fixture</h1>
+    </div>
+</div>
+<hr/>
+<div>
+    <div id="fixture" class="fixture">
+    </div>
+</div>
+<link rel="stylesheet" href="static/css/jquery.brackets.min.css">
+<link rel="stylesheet" href="static/css/pages/home.css">
+
+
+<script src="static/js/jquery.brackets.min.js"></script>
+
+<script>
+
+    var fixtureData = {};
+
+// $(function() {
+//     $('#fixture').bracket({
+//     teamWidth: 100,
+//   scoreWidth: 40,
+//   matchMargin: 50,
+//   roundMargin: 30,
+//   skipConsolationRound: false,
+//   init: fixtureData,
+//   centerConnectors:true
+//      });
+//   })
+</script>
+
+<ol class="breadcrumb">
+    <li>
+        <a href="/">Home</a>
+    </li>
+    <li>
+        <a href="/fixtures">Fixtures</a>
+    </li>
+    <li class="active">Singles - Men</li>
+</ol>

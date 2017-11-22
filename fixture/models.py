@@ -1,6 +1,5 @@
 from django.db import models
-from django.http import HttpResponseRedirect
-
+import datetime
 # Create your models here.
 
 
@@ -10,21 +9,28 @@ class Player(models.Model):
     def __str__(self):
         return self.name
 
-
 class Fixture(models.Model):
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=1024, blank=True, default='', null=True)
-    players = models.ManyToManyField(Player)
+    # players = models.ManyToManyField(FixturePlayer)
+    pub_date  =models.DateTimeField('date published', null=True)
 
     def __str__(self):
         return self.name
 
     def save(self, *args, **kwargs):
-
+        pub_date = datetime.datetime.utcnow()
         super(Fixture, self).save(*args, **kwargs)
 
-        return HttpResponseRedirect("/admin/fixture/fixture/%d/change/" % (self.pk))
+class FixturePlayer(models.Model):
+    class Meta:
+        unique_together = (('rank', 'fixture'),)
+    rank = models.IntegerField()
+    player = models.ForeignKey(Player, related_name="rank_in_fixture")
+    fixture = models.ForeignKey(Fixture, related_name="players")
 
+    def __str__(self):
+        return self.player.name
 
 class Match(models.Model):
     class Meta:

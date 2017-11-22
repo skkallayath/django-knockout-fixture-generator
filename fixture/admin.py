@@ -77,7 +77,10 @@ create_fixture.short_description = "Create knockout fixture"
 class PlayerAdmin(admin.ModelAdmin):
     list_display = ['name']
     ordering = ['name']
-    actions = [create_fixture]
+
+class FixturePlayerAdmin(admin.ModelAdmin):
+    list_display = ['name']
+    ordering = ['rank']
 
 class MatchAdmin(admin.ModelAdmin):
     readonly_fields = ('match_number','fixture','match_round', 'left_previous','right_previous','player_1', 'player_2', 'status','winning_palyer',  )
@@ -96,14 +99,29 @@ class MatchInline(admin.TabularInline):
     def has_add_permission(self, request):
         return False
 
-class FixtureAdmin(admin.ModelAdmin):
-    readonly_fields = ('players',)
-    fields = ('name', 'description', 'players', )
-    inlines = [
-        MatchInline,
-    ]
+class FixturePlayerInline(admin.TabularInline):
+    model = FixturePlayer
+    ordering = ['rank']
+    readonly_fields = ('rank', )
+    fields = ('name')
+    can_delete = False
     def has_add_permission(self, request):
         return False
+
+class FixtureAdmin(admin.ModelAdmin):
+    # readonly_fields = ('players',)
+    fields = ('name', 'description', )
+    inlines = [
+        MatchInline,
+        FixturePlayerInline,
+    ]
+
+    def save(self, *args, **kwargs):
+
+        super(FixtureAdmin, self).save(*args, **kwargs)
+
+        return HttpResponseRedirect("/admin/fixture/fixture/%d/change/" % (self.pk))
+
 
 admin.site.register(Player, PlayerAdmin)
 admin.site.register(Match, MatchAdmin)
