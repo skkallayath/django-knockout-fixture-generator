@@ -105,3 +105,6 @@ ENV/
 
 # db
 *.sqlite3
+
+# uploaded icons
+icons/

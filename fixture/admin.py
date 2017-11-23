@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Player, Fixture, Match, FixturePlayer, Display
+from .models import Player, Fixture, Match
 from .utils import genearte_random_string
 import math
 
@@ -27,9 +27,9 @@ def create_schedules(fixture):
         _match.fixture = fixture
         _match.match_round = _round
         if _players[i]:
-            _match.player_1 = _players[i].player
+            _match.player_1 = _players[i]
         if _players[-1-i]:
-            _match.player_2 = _players[-1-i].player
+            _match.player_2 = _players[-1-i]
 
         if _match.player_1 and _match.player_2:
             _match.match_number = _counter
@@ -74,46 +74,48 @@ def generate_next_rounds(fixture, matches, _round, counter):
 generate_schedules.short_description = "Generate knockout fixture"
 
 class PlayerAdmin(admin.ModelAdmin):
-    list_display = ['name']
+    list_display = ['name', 'rank', 'fixture']
     ordering = ['name']
 
-class FixturePlayerAdmin(admin.ModelAdmin):
-    list_display = ['name']
-    ordering = ['rank']
-
 class MatchAdmin(admin.ModelAdmin):
-    readonly_fields = ('match_number','fixture','match_round', 'left_previous','right_previous','player_1', 'player_2', 'status','winning_palyer',  )
-    fields = ('match_number',  'player_1', 'player_2','match_round', 'status','winner', 'winning_palyer', )
+    readonly_fields = ('description', 'name', 'match_number','fixture','match_round', 'left_previous','right_previous','player_1', 'player_2', 'status','winning_palyer',)
+    fields = ('name', 'description', 'fixture', 'match_number',  'player_1', 'player_2','match_round', 'status','winner', 'winning_palyer', )
     def has_add_permission(self, request):
         return False
-
-    can_delete = False
+    
+    def has_delete_permission(self, request, obj=None):
+        return False
+    
+    def get_actions(self, request):
+        actions = super().get_actions(request)
+        if 'delete_selected' in actions:
+            del actions['delete_selected']
+        print(actions.items())
+        return actions
 
 class MatchInline(admin.TabularInline):
     model = Match
-    ordering = ['match_number']
-    readonly_fields = ('match_number','fixture','match_round', 'left_previous','right_previous','player_1', 'player_2', 'status','winning_palyer',  )
-    fields = ('match_number',  'player_1', 'player_2','match_round', 'status','winner', 'winning_palyer', )
+    ordering = ['match_number',]
+    readonly_fields = ('description', 'match_number','fixture','match_round', 'left_previous','right_previous','player_1', 'player_2', 'status','winning_palyer',  )
+    fields = ('description', 'match_number', 'player_1', 'player_2','match_round', 'status','winner', 'winning_palyer', )
     can_delete = False
     def has_add_permission(self, request):
         return False
 
-class FixturePlayerInline(admin.TabularInline):
-    model = FixturePlayer
+class PlayerInline(admin.TabularInline):
+    model = Player
     ordering = ['rank']
-    fields = ('player', 'rank', )
+    fields = ('name', 'rank', )
 
 class FixtureAdmin(admin.ModelAdmin):
     # readonly_fields = ('players',)
-    fields = ('name', 'description', )
+    fields = ('name', 'description', 'icon', )
     inlines = [
+        PlayerInline,
         MatchInline,
-        FixturePlayerInline,
     ]
     actions = [generate_schedules]
 
 admin.site.register(Player, PlayerAdmin)
 admin.site.register(Match, MatchAdmin)
-
 admin.site.register(Fixture, FixtureAdmin)
-admin.site.register(Display)

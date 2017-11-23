@@ -2,16 +2,12 @@ from django.db import models
 import datetime
 # Create your models here.
 
-
-class Player(models.Model):
-    name = models.CharField(max_length=100)
-
-    def __str__(self):
-        return self.name
-
 class Fixture(models.Model):
-    name = models.CharField(max_length=100)
     pub_date  =models.DateTimeField('date published', null=True)
+    icon = models.FileField(upload_to='icons/%Y/%m/%d/', blank=True)
+    name = models.CharField(max_length=256)
+    description = models.TextField(blank=True, default='', null=True)
+
 
     def __str__(self):
         return self.name
@@ -20,19 +16,30 @@ class Fixture(models.Model):
         pub_date = datetime.datetime.utcnow()
         super(Fixture, self).save(*args, **kwargs)
 
-class FixturePlayer(models.Model):
+class Player(models.Model):
     class Meta:
-        unique_together = (('rank', 'fixture'),('fixture', 'player'))
+        unique_together = (('rank', 'fixture'))
     rank = models.IntegerField()
-    player = models.ForeignKey(Player, related_name="rank_in_fixture")
     fixture = models.ForeignKey(Fixture, related_name="players")
+    name = models.CharField(max_length=100)
 
     def __str__(self):
-        return self.player.name
+        return self.name
 
 class Match(models.Model):
     class Meta:
         verbose_name_plural = "Matches"
+
+    @property
+    def description(self):
+        return repr(self)
+
+    @property
+    def name(self):
+        if self.match_number:
+            return "{} - Match {}".format(self.fixture.name, self.match_number)
+        else:
+            return "{}".format(self.fixture.name)
 
     MATCH_STATUS = [
         ("BYE", 'BYE'),
@@ -66,6 +73,9 @@ class Match(models.Model):
         Player, blank=True, null=True, related_name="matches_won")
 
     def __str__(self):
+        return "{}: {}".format(self.name, self.description)
+
+    def __repr__(self):
         _right = "BYE"
         _left = "BYE"
         if self.player_1:
@@ -82,7 +92,7 @@ class Match(models.Model):
             _right = "TBD"
             _left = "TBD"
 
-        return "Round {}: {} vs {}".format(self.match_round, _left, _right)
+        return "{} vs {}".format(_left, _right)
 
     def save(self, *args, **kwargs):
         self.status = "Not Scheduled"
@@ -126,10 +136,3 @@ class Match(models.Model):
 
     def is_bye(self):
         return self.status == 'BYE', self.player_1 or self.player_2
-
-
-class Display(models.Model):
-    fixture = models.ForeignKey(Fixture, related_name="displays")
-    icon = models.FileField(upload_to='icons/%Y/%m/%d/', blank=True)
-    name = models.CharField(max_length=256)
-    description = models.TextField(blank=True, default='', null=True)
