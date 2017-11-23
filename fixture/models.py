@@ -93,12 +93,12 @@ class Match(models.Model):
         if self.player_1:
             _left = "{}".format(self.player_1)
         elif self.left_previous:
-            _left = "Winners ({})".format(self.left_previous)
+            _left = "Winners ({})".format(self.left_previous.description)
         
         if self.player_2:
             _right = "{}".format(self.player_2)
         elif self.right_previous:
-            _right = "Winners ({})".format(self.right_previous)
+            _right = "Winners ({})".format(self.right_previous.description)
         
         if _right == "BYE" and _left == "BYE":
             _right = "TBD"
