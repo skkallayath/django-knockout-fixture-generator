@@ -5,9 +5,9 @@ from fixture.models import Fixture
 
 
 def index(request):
-    latest_fixture_list = Fixture.objects.order_by('-pub_date')[:5]
+    fixture_list = Fixture.objects.order_by('-pub_date')
     template = loader.get_template('fixture/index.html')
     context = {
-        'latest_fixture_list': latest_fixture_list,
+        'fixture_list': fixture_list,
     }
     return HttpResponse(template.render(context, request))

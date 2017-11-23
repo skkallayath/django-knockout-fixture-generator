@@ -2,6 +2,7 @@ from django.contrib import admin
 from .models import Player, Fixture, Match
 from .utils import genearte_random_string
 import math
+from datetime import timedelta
 
 # Register your models here.
 def generate_schedules(modeladmin, request, queryset):
@@ -13,11 +14,14 @@ def generate_schedules(modeladmin, request, queryset):
 def create_schedules(fixture):
     _player_list = list(fixture.players.order_by('rank'))
     _len = len(_player_list)
-    _rounds = int(math.ceil(math.log(_len, 2)))
-    _number_of_players = int(math.pow(2, _rounds))
-    print(_len, _number_of_players, _rounds)
+    if _len == 0:
+        return
+    fixture.rounds = int(math.ceil(math.log(_len, 2)))
+    _number_of_players = int(math.pow(2, fixture.rounds))
+    print(_len, _number_of_players, fixture.rounds)
     _players = _player_list + ([None]*(_number_of_players - _len))
 
+    _date = fixture.start_date
     print(_players)
     _matches = []
     _counter = 1
@@ -32,7 +36,10 @@ def create_schedules(fixture):
             _match.player_2 = _players[-1-i]
 
         if _match.player_1 and _match.player_2:
+            if _counter%fixture.matches_per_day ==0:
+                _date = _date + timedelta(days=1)
             _match.match_number = _counter
+            _match.date = _date
             _counter = _counter+1
             print(_counter)
 
@@ -40,9 +47,9 @@ def create_schedules(fixture):
 
         _matches.append(_match)
     
-    generate_next_rounds(fixture, _matches, _round+1, _counter)
+    generate_next_rounds(fixture, _matches, _round+1, _counter, _date + timedelta(days=1))
 
-def generate_next_rounds(fixture, matches, _round, counter):
+def generate_next_rounds(fixture, matches, _round, counter, _date):
     _matches = []
     _len = len(matches)
     if _len <=1:
@@ -62,6 +69,9 @@ def generate_next_rounds(fixture, matches, _round, counter):
             _match.player_2 = _right_winner
 
         _match.match_number = counter
+        _match.date = _date
+        if i%fixture.matches_per_day == 0:
+                _date = _date + timedelta(days=1)
         counter = counter+1
         print(counter)
 
@@ -69,7 +79,7 @@ def generate_next_rounds(fixture, matches, _round, counter):
 
         _matches.append(_match)
     
-    generate_next_rounds(fixture, _matches, _round+1, counter)
+    generate_next_rounds(fixture, _matches, _round+1, counter, _date + timedelta(days=1))
 
 generate_schedules.short_description = "Generate knockout fixture"
 
@@ -79,7 +89,7 @@ class PlayerAdmin(admin.ModelAdmin):
 
 class MatchAdmin(admin.ModelAdmin):
     readonly_fields = ('description', 'name', 'match_number','fixture','match_round', 'left_previous','right_previous','player_1', 'player_2', 'status','winning_palyer',)
-    fields = ('name', 'description', 'fixture', 'match_number',  'player_1', 'player_2','match_round', 'status','winner', 'winning_palyer', )
+    fields = ('date', 'name', 'description', 'fixture', 'match_number',  'player_1', 'player_2','match_round', 'status','winner', 'winning_palyer', )
     def has_add_permission(self, request):
         return False
     
@@ -97,7 +107,7 @@ class MatchInline(admin.TabularInline):
     model = Match
     ordering = ['match_number',]
     readonly_fields = ('description', 'match_number','fixture','match_round', 'left_previous','right_previous','player_1', 'player_2', 'status','winning_palyer',  )
-    fields = ('description', 'match_number', 'player_1', 'player_2','match_round', 'status','winner', 'winning_palyer', )
+    fields = ('date', 'description', 'match_number', 'player_1', 'player_2','match_round', 'status','winner', 'winning_palyer', )
     can_delete = False
     def has_add_permission(self, request):
         return False
@@ -108,8 +118,8 @@ class PlayerInline(admin.TabularInline):
     fields = ('name', 'rank', )
 
 class FixtureAdmin(admin.ModelAdmin):
-    # readonly_fields = ('players',)
-    fields = ('name', 'description', 'icon', )
+    readonly_fields = ('rounds',)
+    fields = ('name', 'description', 'icon', 'start_date', 'matches_per_day', )
     inlines = [
         PlayerInline,
         MatchInline,

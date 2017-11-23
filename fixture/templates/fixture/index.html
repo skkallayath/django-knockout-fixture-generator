@@ -1,35 +1,41 @@
-{%extends '../layout.html' %}
-{% block content %}
+{%extends '../layout.html' %} {% load staticfiles %} {% block content %}
 <div class="header-content">
     <div class="header-content-inner">
         <h1 id="homeHeading">Fixtures</h1>
     </div>
 </div>
 <hr/>
-<div>
-    <div id="fixture" class="fixture">
+<div class="col-md-6 col-lg-6">
+    <h4>Fixtures</h4>
+    <div class="row">
+        <div class="view-panel">
+            <div class="row inner-bg">
+                {% for fixture in fixture_list %}
+                <div class="col-md-4 col-sm-6">
+                    <a href="/fixture/{{fixture.id}}">
+                        <div class="service-box">
+                            <img src="/{{fixture.icon_url}}" alt="fixture" class="" height="100" />
+                            <h4 class="">{{fixture.name}}</h4>
+                            <p class="">{{fixture.description}}</p>
+                        </div>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-md-6 col-lg-6">
+    <div class="row">
+        <h4>Matches</h4>
+        <div class="view-panel">
+            <div class="row inner-bg">
+                {% for fixture in fixture_list %}
+                <div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
     </div>
 </div>
 {% endblock content %}
-<!-- <link rel="stylesheet" href="static/css/jquery.brackets.min.css">
-<link rel="stylesheet" href="static/css/pages/home.css"> -->
-
-
-<!-- <script src="static/js/jquery.brackets.min.js"></script> -->
-
-<!-- <script>
-
-    var fixtureData = {};
-
-$(function() {
-    $('#fixture').bracket({
-    teamWidth: 100,
-  scoreWidth: 40,
-  matchMargin: 50,
-  roundMargin: 30,
-  skipConsolationRound: false,
-  init: fixtureData,
-  centerConnectors:true
-     });
-  })
-</script> -->

@@ -1,13 +1,24 @@
 from django.db import models
 import datetime
+from django.core.validators import MinValueValidator
 # Create your models here.
 
 class Fixture(models.Model):
     pub_date  =models.DateTimeField('date published', null=True)
-    icon = models.FileField(upload_to='icons/%Y/%m/%d/', blank=True)
+    icon = models.ImageField(upload_to='static/icons',
+                             verbose_name='image',)
     name = models.CharField(max_length=256)
     description = models.TextField(blank=True, default='', null=True)
+    rounds = models.IntegerField(default=0)
 
+    start_date = models.DateField('Start date')
+    matches_per_day = models.PositiveIntegerField(validators=[MinValueValidator(1)])
+
+    @property
+    def icon_url(self):
+        if self.icon:
+            return self.icon.url
+        return '/static/img/icons/fixture.png'
 
     def __str__(self):
         return self.name
@@ -51,6 +62,7 @@ class Match(models.Model):
         ("Player 1", "Player 1"),
         ("Player 2", "Player 2")
     ]
+    date = models.DateField('Match Date', null=True)
     match_number = models.IntegerField(blank=True, null=True)
     fixture = models.ForeignKey(Fixture, related_name="matches")
     match_round = models.IntegerField()
