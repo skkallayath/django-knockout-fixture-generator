@@ -1,20 +1,24 @@
 {%extends '../layout.html' %} {% load staticfiles %} {% block content %}
 <div class="header-content">
     <div class="header-content-inner">
-        <h1 id="homeHeading">Fixtures</h1>
+        <h1 id="homeHeading">Tournaments</h1>
     </div>
 </div>
 <hr/>
-<div class="col-md-6 col-lg-6">
+<div class="inner-bg">
     <h4>Fixtures</h4>
     <div class="row">
         <div class="view-panel">
-            <div class="row inner-bg">
-                {% for fixture in fixture_list %}
-                <div class="col-md-4 col-sm-6">
+            <div class="row">
+                {% if not fixture_list %}
+                <div>
+                    <p>No mathces to display</p>
+                </div>
+                {% endif %} {% for fixture in fixture_list %}
+                <div class="col-md-6 col-sm-6">
                     <a href="/fixture/{{fixture.id}}">
                         <div class="service-box">
-                            <img src="/{{fixture.icon_url}}" alt="fixture" class="" height="100" />
+                            <img src="/{{fixture.icon_url}}" alt="fixture" class="" height="120" />
                             <h4 class="">{{fixture.name}}</h4>
                             <p class="">{{fixture.description}}</p>
                         </div>
@@ -25,16 +29,41 @@
         </div>
     </div>
 </div>
-<div class="col-md-6 col-lg-6">
-    <div class="row">
-        <h4>Matches</h4>
-        <div class="view-panel">
-            <div class="row inner-bg">
-                {% for fixture in fixture_list %}
-                <div>
-                </div>
-                {% endfor %}
+<div class="row inner-bg">
+    <h4>Matches</h4>
+    <div class="view-panel">
+        <div class="row">
+            {% if not match_list %}
+            <div>
+                <p>No mathces to display</p>
             </div>
+            {% endif %} {% for match_fixture in match_list %}
+            <div class="col-md-6 col-sm-6">
+                <h3>{{match_fixture.fixture.name}}</h3>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Match No</th>
+                            <th>Match</th>
+                            <th>Scheduled Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if not match_fixture.matches %}
+                        <tr>
+                            <td colspan="2">No matches scheduled</td>
+                        </tr>
+                        {% endif %} {% for match in match_fixture.matches %}
+                        <tr>
+                            <td>{{match.match_number}}</td>
+                            <td>{{match.description}}</td>
+                            <td>{{match.date|date}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% endfor %}
         </div>
     </div>
 </div>
