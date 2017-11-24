@@ -24,9 +24,9 @@ def index(request, fixture_id):
 
 def get_bracket_info(fixture):
     results = []
-    teams = list(map(lambda x: x.get_player_names(), fixture.matches.filter(match_round=1)))
+    teams = list(map(lambda x: x.get_player_names(), fixture.matches.filter(match_round=1).order_by('id')))
 
     for r in range(1, fixture.rounds+1):
-        results.append(list(map(lambda x: x.get_result_values(), fixture.matches.filter(match_round=r))))
+        results.append(list(map(lambda x: x.get_result_values(), fixture.matches.filter(match_round=r).order_by('id'))))
     
     return teams, results
