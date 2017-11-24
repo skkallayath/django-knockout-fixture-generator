@@ -19,6 +19,8 @@ def create_schedules(fixture):
     if _len == 0:
         return
     fixture.rounds = int(math.ceil(math.log(_len, 2)))
+    fixture.save()
+
     _number_of_players = int(math.pow(2, fixture.rounds))
     _players = _player_list + ([None]*(_number_of_players - _len))
 
@@ -47,7 +49,7 @@ def create_schedules(fixture):
         _match.save()
 
         _matches.append(_match)
-    
+
     generate_next_rounds(fixture, _matches, _round+1, _counter, _date + timedelta(days=1))
 
 def generate_next_rounds(fixture, matches, _round, counter, _date):

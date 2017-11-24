@@ -90,19 +90,22 @@
 
 <script>
 
-    var fixtureData = {};
+    var fixtureData = {
+        "teams": JSON.parse('{{teams|safe}}'),
+        "results": JSON.parse('{{results|safe}}')
+    };
 
-    // $(function () {
-    //     $('#fixture').bracket({
-    //         teamWidth: 200,
-    //         scoreWidth: 40,
-    //         matchMargin: 50,
-    //         roundMargin: 50,
-    //         skipConsolationRound: false,
-    //         init: fixtureData,
-    //         centerConnectors: true
-    //     });
-    // })
+    $(function () {
+        $('#fixture').bracket({
+            teamWidth: 200,
+            scoreWidth: 40,
+            matchMargin: 50,
+            roundMargin: 50,
+            skipConsolationRound: false,
+            init: fixtureData,
+            centerConnectors: true
+        });
+    })
 </script> {% endblock %} {% block breadcrumbs %}
 <ol class="breadcrumb">
     <li>

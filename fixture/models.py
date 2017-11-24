@@ -16,6 +16,8 @@ class Fixture(models.Model):
     matches_per_day = models.PositiveIntegerField(
         validators=[MinValueValidator(1)])
 
+    current_round = models.IntegerField(default=0)
+
     @property
     def icon_url(self):
         if self.icon:
@@ -90,7 +92,7 @@ class Match(models.Model):
 
     def __repr__(self):
         if self.status == 'Finished':
-            return "{} {} vs {} {}".format(self.player_1, self.player_1_score, self.player_2, self.player_2_score)
+            return "{} {}-{} {}".format(self.player_1, self.player_1_score, self.player_2_score, self.player_2)
 
         _right = "BYE"
         _left = "BYE"
@@ -159,5 +161,15 @@ class Match(models.Model):
             except:
                 pass
 
+        if self.status=="Finished":
+            self.fixture.current_round = max(self.fixture.current_round, self.match_round)
+            self.fixture.save()
+
     def is_bye(self):
         return self.status == 'BYE', self.player_1 or self.player_2
+
+    def get_player_names(self):
+        return [str(self.player_1) if self.player_1 else None, str(self.player_2) if self.player_2 else None,]
+
+    def get_result_values(self):
+        return [self.player_1_score, self.player_2_score,]
