@@ -1,0 +1,80 @@
+header,
+header .header-content {
+    position: relative;
+    width: 100%;
+    text-align: center
+}
+
+hr {
+    border-color: #F05F40;
+    border-width: 3px;
+    max-width: 50px
+}
+
+p {
+    font-size: 16px;
+    line-height: 1.5;
+    margin-bottom: 20px
+}
+
+header {
+    min-height: auto;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    background-size: cover;
+    -o-background-size: cover;
+    background-position: center;
+    background-image: url(../img/header.jpg);
+    color: #fff
+}
+
+header .header-content {
+    padding: 100px 15px
+}
+
+header .header-content .header-content-inner h1 {
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-top: 0;
+    margin-bottom: 0;
+    font-size: 30px
+}
+
+header .header-content .header-content-inner hr {
+    margin: 30px auto
+}
+
+header .header-content .header-content-inner p {
+    font-weight: 300;
+    color: rgba(255, 255, 255, .7);
+    font-size: 16px;
+    margin-bottom: 50px
+}
+
+@media (min-width:768px) {
+    header {
+        min-height: 100%
+    }
+    header .header-content {
+        position: absolute;
+        top: 50%;
+        -webkit-transform: translateY(-50%);
+        -ms-transform: translateY(-50%);
+        transform: translateY(-50%);
+        padding: 0 50px
+    }
+    header .header-content .header-content-inner {
+        max-width: 1000px;
+        margin-left: auto;
+        margin-right: auto
+    }
+    header .header-content .header-content-inner h1 {
+        font-size: 50px
+    }
+    header .header-content .header-content-inner p {
+        font-size: 18px;
+        max-width: 80%;
+        margin-left: auto;
+        margin-right: auto
+    }
+}
