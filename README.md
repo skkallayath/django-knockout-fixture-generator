@@ -6,38 +6,53 @@ The project uses django framework for backend and admin panel and Jquery Bracket
 
 ## Setup
 
-Clone the project
+#### Clone the project
 ```
 $ git clone https://github.com/skkallayath/django-knockout-fixture-generator
 $ cd django-knockout-fixture-generator
 ```
 
-Create virtual env
+#### Create virtual env
 ```
 $ python3 -m virtualenv env
 $ source env/bin/activate
 ```
 
-Install packages from requirements.txt
+#### Install packages from requirements.txt
 ```
 (env) $ pip install -r requirement.txt
 ```
 
-Setup databse
+#### Setup databse
 ```
 (env) $ python manage.py migrate
 ```
 
-Create superuser to access admin panel
+#### Create superuser to access admin panel
 ```
 (env) $ python manage.py createsuperuser
 ```
 
-## Run application
+### Run application
 
 ```
 (env) $ python manage.py runserver
 ```
+
+
+## UI
+
+### Home page
+
+![Home Page](https://raw.githubusercontent.com/skkallayath/django-knockout-fixture-generator/master/screenshots/fixtures%20ui.PNG)
+
+### Upcoming matches
+
+![Upcoming matches](https://raw.githubusercontent.com/skkallayath/django-knockout-fixture-generator/master/screenshots/matches%20ui.PNG)
+
+### Fixture
+
+![Fixture](https://raw.githubusercontent.com/skkallayath/django-knockout-fixture-generator/master/screenshots/fixture%20ui.PNG)
 
 
 ## Admin
@@ -46,38 +61,23 @@ Login to `/admin` with the credentials of superuser.
 
 ### Add Fixture  
 
-![alt text](https://raw.githubusercontent.com/skkallayath/django-knockout-fixture-generator/master/screenshots/add%20fixture.png)
+![Add Fixture](https://raw.githubusercontent.com/skkallayath/django-knockout-fixture-generator/master/screenshots/add%20fixture.PNG)
 
 
 ### Generate Knockout Fixture
 
-![alt text](https://raw.githubusercontent.com/skkallayath/django-knockout-fixture-generator/master/screenshots/Generate%20fixture.png)
+![Generate Knockout Fixture](https://raw.githubusercontent.com/skkallayath/django-knockout-fixture-generator/master/screenshots/Generate%20fixture.PNG)
 
-![alt text](https://raw.githubusercontent.com/skkallayath/django-knockout-fixture-generator/master/screenshots/Fixture%20generated.png)
+![Generate Knockout Fixture - Message](https://raw.githubusercontent.com/skkallayath/django-knockout-fixture-generator/master/screenshots/Fixture%20generated.PNG)
 
 ### Matches of a fixture
 
-![alt text](https://raw.githubusercontent.com/skkallayath/django-knockout-fixture-generator/master/screenshots/Matches.png)
+![Matches of a fixture](https://raw.githubusercontent.com/skkallayath/django-knockout-fixture-generator/master/screenshots/Matches.PNG)
 
 
 ### Updating match results
 
-![alt text](https://raw.githubusercontent.com/skkallayath/django-knockout-fixture-generator/master/screenshots/Update%20results.png)
-
-
-## UI
-
-### Home page
-
-![alt text](https://raw.githubusercontent.com/skkallayath/django-knockout-fixture-generator/master/screenshots/fixtures%20ui.png)
-
-### Upcoming matches
-
-![alt text](https://raw.githubusercontent.com/skkallayath/django-knockout-fixture-generator/master/screenshots/matches%20ui.png)
-
-### Fixture
-
-![alt text](https://raw.githubusercontent.com/skkallayath/django-knockout-fixture-generator/master/screenshots/fixture%20ui.png)
+![Match results](https://raw.githubusercontent.com/skkallayath/django-knockout-fixture-generator/master/screenshots/Update%20results.PNG)
 
 
 ## About
