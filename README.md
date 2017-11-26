@@ -1,4 +1,6 @@
 # django-knockout-fixture-generator
+[![Travis](https://travis-ci.org/skkallayath/django-knockout-fixture-generator.svg?branch=master)]
+
 Create and manage tournament fixtures (knockout).
 
 
