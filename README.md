@@ -1,5 +1,6 @@
 # django-knockout-fixture-generator
-[![Travis](https://travis-ci.org/skkallayath/django-knockout-fixture-generator.svg?branch=master)]
+[![Travis](https://travis-ci.org/skkallayath/django-knockout-fixture-generator.svg?branch=master)](https://travis-ci.org/skkallayath/django-knockout-fixture-generator)
+[![License](http://img.shields.io/badge/license-GPLv3-brightgreen.svg?style=flat)](http://www.gnu.org/licenses/gpl-3.0-standalone.html)
 
 Create and manage tournament fixtures (knockout).
 
