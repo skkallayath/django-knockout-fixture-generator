@@ -26,4 +26,4 @@ install:
   - pip install psycopg2 --quiet
 
 script:
-  - python manage.py syncdb --noinput
+  - python manage.py migrate --noinput
